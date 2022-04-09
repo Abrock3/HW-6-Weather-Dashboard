@@ -1,7 +1,7 @@
 inputEl = document.querySelector("#cityInput");
 cardDisplayEl = document.querySelector("#weatherInfoDisplay");
 weatherTodayEl = document.querySelector("#displayTodayInfo");
-fivDayForecastEl = document.querySelector("#display5DayForecast");
+fiveDayForecastEl = document.querySelector("#displayFiveDayForecast");
 const APIkey = "6d5bd2a287faabc4a551540637c5a51d";
 let city;
 let coordQueryURL;
@@ -9,7 +9,6 @@ let weatherQueryURL;
 let lat;
 let lon;
 let cityDisplayName;
-
 function fetchWeather(coordData) {
   weatherQueryURL =
     `https://api.openweathermap.org/data/2.5/onecall?lat=` +
@@ -39,13 +38,13 @@ function displayWeather(weatherData) {
     `)` +
     `<img src="http://openweathermap.org/img/wn/` +
     weatherData.current.weather[0].icon +
-    `@2x.png"></i></h2>
+    `@2x.png"></img></h2>
   <p>Temp: ` +
     weatherData.current.temp +
-    ` F</p>
+    `° F</p>
   <p>Feels like: ` +
     weatherData.current.feels_like +
-    ` F
+    `° F
   <p>Wind: ` +
     weatherData.current.wind_speed +
     ` MPH</p>
@@ -56,6 +55,23 @@ function displayWeather(weatherData) {
     weatherData.current.uvi +
     `</span></p>
   `;
+  fiveDayForecastEl.innerHTML = "<h3>Five-Day Forecast</h3>";
+  for(let i=1; i <=6;i++){
+      let newCard= document.createElement("div")
+      newCard.innerHTML =
+        `<h3>` +
+        weatherData.daily[i].dt +
+        `</h3><img src="http://openweathermap.org/img/wn/` +
+        weatherData.daily[i].weather[0].icon +
+        `@2x.png"></img><p>High: ° F` +
+        weatherData.daily[i].temp.max +
+        `</p><p>Low: ` +
+        weatherData.daily[i].temp.min +
+        `° F</p><p>Wind: `+weatherData.daily[i].wind_speed+` MPH</p><p>Humidity: `+weatherData.daily[i].humidity+`%</p>`;
+       newCard.classList.add("bg-dark", "border-black", "text-white")
+        fiveDayForecastEl.append(newCard);
+
+  }
 }
 
 inputEl.addEventListener("keydown", function (event) {
