@@ -24,20 +24,15 @@
       <h1>Weather Dashboard</h1>
     </header>
     <main>
-      <div class="container-fluid">
-        <div>
-          <input
-            class="p-2"
-            id="cityInput"
-            placeholder="Search for a city..."
-          />
-        </div>
-        <div id="weatherInfoDisplay">
-          <div id="displayTodayInfo"></div>
-          <div id="displayFiveDayForecast"></div>
-        </div>
+      <div>
+        <input class="p-2" id="cityInput" placeholder="Search for a city..." />
       </div>
-
+      <div id="weatherInfoDisplay">
+        <div id="displayTodayInfo"></div>
+      </div>
+      <div class="container-fluid" id="fiveDayContainer">
+        <div id="displayFiveDayForecast" class="row"></div>
+      </div>
     </main>
     <footer>&copy Adam Brock 2022</footer>
     <script src="./assets/javascript/script.js"></script>

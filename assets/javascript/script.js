@@ -2,6 +2,7 @@ inputEl = document.querySelector("#cityInput");
 cardDisplayEl = document.querySelector("#weatherInfoDisplay");
 weatherTodayEl = document.querySelector("#displayTodayInfo");
 fiveDayForecastEl = document.querySelector("#displayFiveDayForecast");
+fiveDayContainerEl = document.querySelector("#fiveDayContainer");
 const APIkey = "6d5bd2a287faabc4a551540637c5a51d";
 let city;
 let coordQueryURL;
@@ -30,11 +31,16 @@ function fetchWeather(coordData) {
   });
 }
 function displayWeather(weatherData) {
+  let date = new Date(weatherData.current.dt * 1000);
   weatherTodayEl.innerHTML =
     `<h2>` +
     cityDisplayName +
     ` (` +
-    weatherData.current.dt +
+    (date.getMonth() + 1) +
+    `/` +
+    date.getDate() +
+    `/` +
+    date.getFullYear() +
     `)` +
     `<img src="http://openweathermap.org/img/wn/` +
     weatherData.current.weather[0].icon +
@@ -53,24 +59,38 @@ function displayWeather(weatherData) {
     `%</p>
   <p>UV Index: <span id="uvIndexSpan">` +
     weatherData.current.uvi +
-    `</span></p>
-  `;
-  fiveDayForecastEl.innerHTML = "<h3>Five-Day Forecast</h3>";
-  for(let i=1; i <=6;i++){
-      let newCard= document.createElement("div")
-      newCard.innerHTML =
-        `<h3>` +
-        weatherData.daily[i].dt +
-        `</h3><img src="http://openweathermap.org/img/wn/` +
-        weatherData.daily[i].weather[0].icon +
-        `@2x.png"></img><p>High: ° F` +
-        weatherData.daily[i].temp.max +
-        `</p><p>Low: ` +
-        weatherData.daily[i].temp.min +
-        `° F</p><p>Wind: `+weatherData.daily[i].wind_speed+` MPH</p><p>Humidity: `+weatherData.daily[i].humidity+`%</p>`;
-       newCard.classList.add("bg-dark", "border-black", "text-white")
-        fiveDayForecastEl.append(newCard);
-
+    `</span></p>`;
+  for (let i = 1; i <= 5; i++) {
+    let newCard = document.createElement("div");
+    date = new Date(weatherData.daily[i].dt * 1000);
+    newCard.innerHTML =
+      `<h4>(` +
+      (date.getMonth() + 1) +
+      `/` +
+      date.getDate() +
+      `/` +
+      date.getFullYear() +
+      `)` +
+      `</h4><img src="http://openweathermap.org/img/wn/` +
+      weatherData.daily[i].weather[0].icon +
+      `@2x.png"></img><p>High: ` +
+      weatherData.daily[i].temp.max +
+      `° F</p><p>Low: ` +
+      weatherData.daily[i].temp.min +
+      `° F</p><p>Wind: ` +
+      weatherData.daily[i].wind_speed +
+      ` MPH</p><p>Humidity: ` +
+      weatherData.daily[i].humidity +
+      `%</p>`;
+    newCard.classList.add(
+      "col",
+      "bg-dark",
+      "border-black",
+      "text-white",
+      "p-2",
+      "m-2"
+    );
+    fiveDayForecastEl.append(newCard);
   }
 }
 
