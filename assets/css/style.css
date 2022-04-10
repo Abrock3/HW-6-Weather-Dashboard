@@ -1,14 +1,34 @@
 .borderDisplay {
   border: solid black 3px;
 }
+
 body {
+    min-height:100%;
+    position: relative;
 }
+
 footer {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
-
 }
-footer h3 {
-  margin: auto;
+
+#cityInput {
+  width: 100%;
+}
+
+/* This enables the use of flexbox on more versions of safari, which is required for proper column spacing */
+.row-fluid, .row {
+  display: -webkit-flex;
+}
+
+html {
+  font-size: .7rem;
+}
+
+@media screen and (min-width: 577px) {
+  html {
+    font-size: 1rem;
+  }
 }

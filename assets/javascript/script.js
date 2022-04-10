@@ -3,19 +3,25 @@ const weatherTodayEl = document.querySelector("#displayTodayInfo");
 const fiveDayForecastEl = document.querySelector("#displayFiveDayForecast");
 const fiveDayContainerEl = document.querySelector("#fiveDayContainer");
 const searchHistoryEl = document.querySelector("#searchHistory");
+// our instructors advised us that in this case, there was no need to hide the API key, but in the future it's very good practice to do so
 const APIkey = "6d5bd2a287faabc4a551540637c5a51d";
 let city;
 let coordQueryURL;
 let weatherQueryURL;
-let lat;
-let lon;
 let cityDisplayName;
+// Attempts to set a variable to a locally stored array's value; failing that it will set the variable to an empty array
 let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) ?? [];
+// if the user has any search history, this will display all weather info about the first city in the index;
 if (searchHistory.length) {
   displayHistory();
   city = searchHistory[0];
   submitHandler();
 }
+
+// if the first API call returns a city, this will store the city, state, and country of that search in the searchistory array
+// it will then store the newly created array in local storage for later use
+// if the city name already exists in the array, it will be deleted and unshifted to the beginning of the array
+// finally, setting the length of the array will cap the number of stored items at 10
 function addHistory() {
   if (
     searchHistory.indexOf(cityDisplayName) ||
@@ -29,6 +35,7 @@ function addHistory() {
   displayHistory();
 }
 
+// iterates through the searchHistory array and appends li elements to a list; displaying previous searches
 function displayHistory() {
   searchHistoryEl.innerHTML = "";
   for (let i = 0; i < searchHistory.length; i++) {
@@ -43,12 +50,15 @@ function displayHistory() {
         "rounded"
       );
       historyLi.innerHTML = searchHistory[i];
+      // the intent is to use these as buttons, so I set type here
       historyLi.setAttribute("type", "button");
       searchHistoryEl.append(historyLi);
     }
   }
 }
-
+// this function uses the coordinate information from the initial API call in a second API call's search parameters
+// an object containing the weather info for those coordinates is returned
+// we pass that object into the displayWeather function as an argument
 function fetchWeather(coordData) {
   let stateName = "";
   if (coordData[0].state) {
@@ -75,7 +85,9 @@ function fetchWeather(coordData) {
     }
   });
 }
+
 function displayWeather(weatherData) {
+  // this portion of the function uses the weatherData object, which was returned by the API call to set the HTML of a container to display today's weather
   weatherTodayEl.classList.add("borderDisplay");
   let date = new Date(weatherData.current.dt * 1000);
   weatherTodayEl.innerHTML =
@@ -106,14 +118,18 @@ function displayWeather(weatherData) {
   <p>UV Index: <span id="uvIndexSpan">` +
     weatherData.current.uvi +
     `</span></p>`;
+
+  // this will set the color of the UV index span, based on what range the UV index is in
   const uvSpanEl = document.querySelector("#uvIndexSpan");
   if (weatherData.current.uvi > 7.99) {
-    uvSpanEl.classList.add("bg-danger", "p-1","rounded");
+    uvSpanEl.classList.add("bg-danger", "p-1", "rounded");
   } else if (weatherData.current.uvi > 2.99) {
     uvSpanEl.classList.add("bg-warning", "p-1", "rounded");
   } else {
     uvSpanEl.classList.add("bg-success", "p-1", "rounded");
   }
+  // this will clear out the previous five day forecast and then iterates through the .daily key in the weatherdata object to display cards
+  //  with the projected weather for the next 5 days
   fiveDayForecastEl.innerHTML = "";
   for (let i = 1; i <= 5; i++) {
     let newCard = document.createElement("div");
@@ -144,12 +160,16 @@ function displayWeather(weatherData) {
       "text-white",
       "p-2",
       "m-2",
-      "rounded"
+      "rounded",
     );
 
     fiveDayForecastEl.append(newCard);
   }
 }
+// this can get called 3 different ways: on page load it is called, with city set to the first index in the searchHistory array
+// when a user searches a city, if the API call is successful this function will be called with city set to the value of the input box
+// when a user clicks a button in the search history, this function is called with city set to the text of the button
+// the function will concatenate a URL together from the city and API key, and static portions of the URL, and then calls an API to search for a city
 function submitHandler() {
   coordQueryURL =
     "https://api.openweathermap.org/geo/1.0/direct?q=" +
@@ -169,12 +189,14 @@ function submitHandler() {
     }
   });
 }
+// if the user hits enter, the submitHandler function is called
 inputEl.addEventListener("keydown", function (event) {
   if (event.keyCode === 13) {
     city = inputEl.value;
     submitHandler(event);
   }
 });
+// if a search history button is clicked, the submitHandler function is called
 searchHistoryEl.addEventListener("click", function (event) {
   event.stopPropagation;
   if (event.target.classList.contains("searchBtnLi")) {
