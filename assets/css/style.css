@@ -1,2 +1,14 @@
-:root {
+.borderDisplay {
+  border: solid black 3px;
+}
+body {
+}
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+
+}
+footer h3 {
+  margin: auto;
 }

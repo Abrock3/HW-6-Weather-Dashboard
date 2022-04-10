@@ -23,18 +23,27 @@
     <header class="bg-dark text-light p-2">
       <h1>Weather Dashboard</h1>
     </header>
-    <main>
-      <div>
-        <input class="p-2" id="cityInput" placeholder="Search for a city..." />
-      </div>
-      <div id="weatherInfoDisplay">
-        <div id="displayTodayInfo"></div>
-      </div>
-      <div class="container-fluid" id="fiveDayContainer">
-        <div id="displayFiveDayForecast" class="row"></div>
+    <main class="container-fluid">
+      <div class="row">
+        <aside class="col-2">
+          <div>
+            <input
+              class="p-2 mt-3"
+              id="cityInput"
+              placeholder="Search for a city..."
+            />
+          </div>
+          <ol id="searchHistory"></ol>
+        </aside>
+        <div class="col-10" id="weatherContainer">
+          <div class="ml-2 m-2 mt-3 p-2 rounded" id="displayTodayInfo"></div>
+          <div class="container-fluid" id="fiveDayContainer">
+            <div id="displayFiveDayForecast" class="row"></div>
+          </div>
+        </div>
       </div>
     </main>
-    <footer>&copy Adam Brock 2022</footer>
+    <footer class="bg-dark text-white"><h5 class="text-center mt-2">&copy Adam Brock 2022</h5></footer>
     <script src="./assets/javascript/script.js"></script>
   </body>
 </html>
