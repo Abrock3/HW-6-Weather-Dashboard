@@ -4,7 +4,6 @@
 
 I was asked to use the following user story and acceptance criteria to create a weather dashboard:
 
-
 ```
 AS A traveler
 I WANT to see the weather outlook for multiple cities
