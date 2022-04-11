@@ -9,14 +9,15 @@ let city;
 let coordQueryURL;
 let weatherQueryURL;
 let cityDisplayName;
-// Attempts to set a variable to a locally stored array's value; failing that it will set the variable to an empty array
-let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) ?? [];
-// if the user has any search history, this will display all weather info about the first city in the index;
-if (searchHistory.length) {
-  displayHistory();
-  city = searchHistory[0];
-  submitHandler();
-}
+// Attempts to set a variable to a locally stored array's value; failing that it will set the variable to an array with an initial default value of A-town at index 0
+let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) ?? [
+  "Atlanta, Georgia, US",
+];
+// This will display all weather info about the first city in the index (this will be Atlanta until the user has other local storage saved);
+
+displayHistory();
+city = searchHistory[0];
+submitHandler();
 
 // if the first API call returns a city, this will store the city, state, and country of that search in the searchistory array
 // it will then store the newly created array in local storage for later use
@@ -56,6 +57,7 @@ function displayHistory() {
     }
   }
 }
+
 // this function uses the coordinate information from the initial API call in a second API call's search parameters
 // an object containing the weather info for those coordinates is returned
 // we pass that object into the displayWeather function as an argument
@@ -77,11 +79,10 @@ function fetchWeather(coordData) {
   fetch(weatherQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (weatherData) {
-        console.log(weatherData);
         displayWeather(weatherData);
       });
     } else {
-      weatherTodayEl.innerHTML = "404 connection error";
+      weatherTodayEl.innerHTML = "404 error. Connection issue.";
     }
   });
 }
@@ -128,6 +129,7 @@ function displayWeather(weatherData) {
   } else {
     uvSpanEl.classList.add("bg-success", "p-1", "rounded");
   }
+
   // this will clear out the previous five day forecast and then iterates through the .daily key in the weatherdata object to display cards
   //  with the projected weather for the next 5 days
   fiveDayForecastEl.innerHTML = "";
@@ -160,7 +162,7 @@ function displayWeather(weatherData) {
       "text-white",
       "p-2",
       "m-2",
-      "rounded",
+      "rounded"
     );
 
     fiveDayForecastEl.append(newCard);
@@ -180,19 +182,25 @@ function submitHandler() {
   fetch(coordQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (coordData) {
-        console.log(coordData);
+        if (coordData[0] === undefined) {
+          window.alert(
+            "No results found! Check if there are alternate spellings, or try including the state or country name."
+          );
+          return;
+        }
         fetchWeather(coordData);
       });
     } else {
-      weatherTodayEl.innerHTML = "No results found";
+      window.alert("404 error. Connection issue.");
       return;
     }
   });
 }
 // if the user hits enter, the submitHandler function is called
 inputEl.addEventListener("keydown", function (event) {
-  if (event.keyCode === 13) {
+  if (event.keyCode === 13 && inputEl.value.length > 0) {
     city = inputEl.value;
+    inputEl.value = "";
     submitHandler(event);
   }
 });
