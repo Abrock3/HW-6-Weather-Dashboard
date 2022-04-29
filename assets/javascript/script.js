@@ -39,8 +39,8 @@ function addHistory() {
 // iterates through the searchHistory array and appends li elements to a list; displaying previous searches
 function displayHistory() {
   searchHistoryEl.innerHTML = "";
-  for (let i = 0; i < searchHistory.length; i++) {
-    if (searchHistory[i]) {
+  searchHistory.forEach((element) => {
+    if (element) {
       let historyLi = document.createElement("li");
       historyLi.classList.add(
         "bg-dark",
@@ -50,12 +50,12 @@ function displayHistory() {
         "searchBtnLi",
         "rounded"
       );
-      historyLi.innerHTML = searchHistory[i];
-      // the intent is to use these as buttons, so I set type here
+      historyLi.innerHTML = element;
+      // the intent is to use these as buttons
       historyLi.setAttribute("type", "button");
       searchHistoryEl.append(historyLi);
     }
-  }
+  });
 }
 
 // this function uses the coordinate information from the initial API call in a second API call's search parameters
@@ -64,18 +64,11 @@ function displayHistory() {
 function fetchWeather(coordData) {
   let stateName = "";
   if (coordData[0].state) {
-    stateName = ", " + coordData[0].state;
+    stateName = `, ${coordData[0].state}`;
   }
-  cityDisplayName = coordData[0].name + stateName + ", " + coordData[0].country;
+  cityDisplayName = `${coordData[0].name}${stateName}, ${coordData[0].country}`;
   addHistory();
-  weatherQueryURL =
-    `https://api.openweathermap.org/data/2.5/onecall?lat=` +
-    coordData[0].lat +
-    `&lon=` +
-    coordData[0].lon +
-    `&exclude=hourly&appid=` +
-    APIkey +
-    `&units=imperial`;
+  weatherQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordData[0].lat}&lon=${coordData[0].lon}&exclude=hourly&appid=${APIkey}&units=imperial`;
   fetch(weatherQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (weatherData) {
@@ -91,34 +84,17 @@ function displayWeather(weatherData) {
   // this portion of the function uses the weatherData object, which was returned by the API call to set the HTML of a container to display today's weather
   weatherTodayEl.classList.add("borderDisplay");
   let date = new Date(weatherData.current.dt * 1000);
-  weatherTodayEl.innerHTML =
-    `<h2>` +
-    cityDisplayName +
-    ` (` +
-    (date.getMonth() + 1) +
-    `/` +
-    date.getDate() +
-    `/` +
-    date.getFullYear() +
-    `)` +
-    `<img src="http://openweathermap.org/img/wn/` +
-    weatherData.current.weather[0].icon +
-    `@2x.png"></img></h2>
-  <p>Temp: ` +
-    weatherData.current.temp +
-    `° F</p>
-  <p>Feels like: ` +
-    weatherData.current.feels_like +
-    `° F
-  <p>Wind: ` +
-    weatherData.current.wind_speed +
-    ` MPH</p>
-  <p>Humidity: ` +
-    weatherData.current.humidity +
-    `%</p>
-  <p>UV Index: <span id="uvIndexSpan">` +
-    weatherData.current.uvi +
-    `</span></p>`;
+  weatherTodayEl.innerHTML = `<h2>${cityDisplayName} (${
+    date.getMonth() + 1
+  }/${date.getDate()}/${date.getFullYear()})</h2>
+  <img src="http://openweathermap.org/img/wn/${
+    weatherData.current.weather[0].icon
+  }@2x.png"/>
+  <p>Temp: ${weatherData.current.temp}° F</p>
+  <p>Feels like: ${weatherData.current.feels_like}° F</p>
+  <p>Wind: ${weatherData.current.wind_speed} MPH</p>
+  <p>Humidity: ${weatherData.current.humidity}%</p>
+  <p>UV Index: <span id="uvIndexSpan">${weatherData.current.uvi}</span></p>`;
 
   // this will set the color of the UV index span, based on what range the UV index is in
   const uvSpanEl = document.querySelector("#uvIndexSpan");
@@ -136,25 +112,16 @@ function displayWeather(weatherData) {
   for (let i = 1; i <= 5; i++) {
     let newCard = document.createElement("div");
     date = new Date(weatherData.daily[i].dt * 1000);
-    newCard.innerHTML =
-      `<h4>(` +
-      (date.getMonth() + 1) +
-      `/` +
-      date.getDate() +
-      `/` +
-      date.getFullYear() +
-      `)` +
-      `</h4><img src="http://openweathermap.org/img/wn/` +
-      weatherData.daily[i].weather[0].icon +
-      `@2x.png"></img><p>High: ` +
-      weatherData.daily[i].temp.max +
-      `° F</p><p>Low: ` +
-      weatherData.daily[i].temp.min +
-      `° F</p><p>Wind: ` +
-      weatherData.daily[i].wind_speed +
-      ` MPH</p><p>Humidity: ` +
-      weatherData.daily[i].humidity +
-      `%</p>`;
+    newCard.innerHTML = `<h4>(${
+      date.getMonth() + 1
+    }/${date.getDate()}/${date.getFullYear()})</h4>
+    <img src="http://openweathermap.org/img/wn/${
+      weatherData.daily[i].weather[0].icon
+    }@2x.png"/>
+    <p>High: ${weatherData.daily[i].temp.max}° F</p>
+    <p>Low: ${weatherData.daily[i].temp.min}° F</p>
+    <p>Wind: ${weatherData.daily[i].wind_speed} MPH</p>
+    <p>Humidity: ${weatherData.daily[i].humidity}%</p>`;
     newCard.classList.add(
       "col",
       "bg-dark",
@@ -173,12 +140,7 @@ function displayWeather(weatherData) {
 // when a user clicks a button in the search history, this function is called with city set to the text of the button
 // the function will concatenate a URL together from the city and API key, and static portions of the URL, and then calls an API to search for a city
 function submitHandler() {
-  coordQueryURL =
-    "https://api.openweathermap.org/geo/1.0/direct?q=" +
-    city +
-    "&appid=" +
-    APIkey +
-    "&units=imperial";
+  coordQueryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIkey}&units=imperial`;
   fetch(coordQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (coordData) {
