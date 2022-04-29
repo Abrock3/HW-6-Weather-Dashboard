@@ -39,7 +39,5 @@ Below is a screenshot of the page:
 
 ## Credits
 
+I used bootstrap to help style this page.
 I used a W3 schools tutorial on how to convert unix timestamps into different time values.
-
-## License
-I am not adding a license to this at this time.
