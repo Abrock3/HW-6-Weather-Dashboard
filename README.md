@@ -38,7 +38,14 @@ Below is a screenshot of the page:
 ![Screenshot](./assets/images/screenshot.jpg?raw=true "Screenshot")
 
 ![Screenshot](./assets/images/screenshot2.jpg?raw=true "Screenshot")
+
 ## Credits
 
 I used bootstrap to help style this page.
 I used a W3 schools tutorial on how to convert unix timestamps into different time values.
+
+## Contact Info
+
+Telephone: 727-400-9280
+Email: a.paulbrock@gmail.com
+linkedin: https://www.linkedin.com/in/adam-p-brock/
