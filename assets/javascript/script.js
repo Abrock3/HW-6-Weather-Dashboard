@@ -3,11 +3,9 @@ const weatherTodayEl = document.querySelector("#displayTodayInfo");
 const fiveDayForecastEl = document.querySelector("#displayFiveDayForecast");
 const fiveDayContainerEl = document.querySelector("#fiveDayContainer");
 const searchHistoryEl = document.querySelector("#searchHistory");
-// our instructors advised us that in this case, there was no need to hide the API key, but in the future it's very good practice to do so
+// our instructors advised us that in this case there was no need to hide the API key, but in the future it's very good practice to do so
 const APIkey = "6d5bd2a287faabc4a551540637c5a51d";
-let city;
-let coordQueryURL;
-let weatherQueryURL;
+let city = "";
 let cityDisplayName;
 // Attempts to set a variable to a locally stored array's value; failing that it will set the variable to an array with an initial default value of A-town at index 0
 let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) ?? [
@@ -15,9 +13,7 @@ let searchHistory = JSON.parse(localStorage.getItem("searchHistory")) ?? [
 ];
 // This will display all weather info about the first city in the index (this will be Atlanta until the user has other local storage saved);
 
-displayHistory();
-city = searchHistory[0];
-submitHandler();
+
 
 // if the first API call returns a city, this will store the city, state, and country of that search in the searchistory array
 // it will then store the newly created array in local storage for later use
@@ -68,7 +64,7 @@ function fetchWeather(coordData) {
   }
   cityDisplayName = `${coordData[0].name}${stateName}, ${coordData[0].country}`;
   addHistory();
-  weatherQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordData[0].lat}&lon=${coordData[0].lon}&exclude=hourly&appid=${APIkey}&units=imperial`;
+  const weatherQueryURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordData[0].lat}&lon=${coordData[0].lon}&exclude=hourly&appid=${APIkey}&units=imperial`;
   fetch(weatherQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (weatherData) {
@@ -140,7 +136,7 @@ function displayWeather(weatherData) {
 // when a user clicks a button in the search history, this function is called with city set to the text of the button
 // the function will concatenate a URL together from the city and API key, and static portions of the URL, and then calls an API to search for a city
 function submitHandler() {
-  coordQueryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIkey}&units=imperial`;
+  const coordQueryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIkey}&units=imperial`;
   fetch(coordQueryURL).then(function (response) {
     if (response.ok) {
       response.json().then(function (coordData) {
@@ -174,3 +170,6 @@ searchHistoryEl.addEventListener("click", function (event) {
     submitHandler();
   }
 });
+displayHistory();
+city = searchHistory[0];
+submitHandler();
