@@ -37,6 +37,7 @@ Below is a screenshot of the page:
 
 ![Screenshot](./assets/images/screenshot.jpg?raw=true "Screenshot")
 
+![Screenshot](./assets/images/screenshot2.jpg?raw=true "Screenshot")
 ## Credits
 
 I used bootstrap to help style this page.
